@@ -17,12 +17,13 @@ class MemberServiceTest {
     MemberService memberService;
     MemoryMemberRepository memberRepository;
 
+    //@Test 전에 실행된다.
     @BeforeEach
     public void beforeEach() {
         memberRepository = new MemoryMemberRepository();
         memberService = new MemberService(memberRepository);
     }
-
+    //@Test 다음에 실행된다.
     @AfterEach
     public void afterEach() {
         memberRepository.clearStroe();
