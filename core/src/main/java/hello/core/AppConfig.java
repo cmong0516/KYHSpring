@@ -16,6 +16,9 @@ import org.springframework.context.annotation.Configuration;
 //수정할 부분이 생겨도 사용부만 수정하면 된다 !!
 
 //@Configuration : 자 이게 설정파일이야.
+//이게 CGLIB를 사용하게 해줄거임.
+//CGLIB : 스프링 빈에 객체가 등록되어 있지 않으면 등록하려는 클래스를 상속받는 임의의 클래스를 만들어 빈에 등록한다.
+//        등록되어 있다면 객체를 더 생성하지 않고 그것을 사용한다.
 @Configuration
 public class AppConfig {
 
@@ -29,18 +32,21 @@ public class AppConfig {
     //@Bean memberService라는 이름으로 Spring 컨테이너에 이거 올릴거야.
     @Bean
     public MemberService memberService() {
+        System.out.println("Call AppConfig.memberService");
         return new MemberServiceImpl(memberRepository());
     }
 
     //Bean memberRepository라는 이름으로 Spring 컨테이너에 이거 올릴거야.
     @Bean
     public MemberRepository memberRepository() {
+        System.out.println("Call AppConfig.memberRepository");
         return new MemoryMemberRepository();
     }
 
     //Bean orderService 라는 이름으로 Spring 컨테이너에 올릴거야.
     @Bean
     public OrderService orderService() {
+        System.out.println("Call AppConfig.orderService");
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 //이처럼 코드를 구현체가 아닌 interface 역할에 의존하게 만들경우
@@ -51,6 +57,7 @@ public class AppConfig {
     @Bean
     public DiscountPolicy discountPolicy() {
         //return new FixDiscountPolicy();
+        System.out.println("Call AppConfig.discountPolicy");
         return new RateDiscountPolicy();
     }
 }

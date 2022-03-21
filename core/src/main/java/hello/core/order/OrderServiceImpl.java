@@ -1,5 +1,6 @@
 package hello.core.order;
 
+import hello.core.annotation.MainDiscountPolicy;
 import hello.core.discount.DiscountPolicy;
 //구현체 의존 안할거임 ㅇㅇ
 //import hello.core.discount.FixDiscountPolicy;
@@ -7,6 +8,12 @@ import hello.core.discount.DiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
 import hello.core.member.MemoryMemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+@Component
 
 public class OrderServiceImpl implements OrderService {
 
@@ -27,7 +34,13 @@ public class OrderServiceImpl implements OrderService {
     //AppConfig 에서 주입할거니까 생성자 만들기.
 
 
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+//@RequiredArgsConstructor 이게 아래꺼 생성해줌!
+//    근데 AutoWired는 어케함....??
+    @Autowired
+    public OrderServiceImpl(MemberRepository memberRepository,
+                            //@Qualifier("mainDiscountPolicy")
+                            @MainDiscountPolicy
+                                    DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }
@@ -39,4 +52,13 @@ public class OrderServiceImpl implements OrderService {
 
         return new Order(memberId, itemName, itemPrice, discountPrice);
     }
+
+    public MemberRepository getMemberRepository() {
+        return memberRepository;
+    }
 }
+
+//조회 빈이 1개가 아닐경우     지금은 rateDiscountPolicy , fixDiscountPolicy
+// 1. @Qualifier 만약 @Qualifier 이름으로도 못찾으면 저 이름의 빈을 찾지만 그 용도로는 사용하지 말것.
+// 2. @Primary 두개중의 우선순위를 정해서 먼저 그걸 찾게함.
+// 두개중 뭐가 우선순위가 높을까 ?? 1는 수동 2는 자동 이기때문에 1이 우선순위가 높다.
