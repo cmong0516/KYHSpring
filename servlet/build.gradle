@@ -27,7 +27,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'javax.servlet:jstl'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	runtimeOnly 'mysql:mysql-connector-java'
+
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
